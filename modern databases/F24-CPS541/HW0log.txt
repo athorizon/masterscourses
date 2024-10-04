@@ -1,0 +1,281 @@
+SQL> 
+SQL> --define the width of the display (example: 150 columns)
+SQL> set linesize 150;
+SQL> 
+SQL> --define the page size -- no of rows to be printed before header appears
+SQL> set pagesize 120;
+SQL> 
+SQL> DROP TABLE STUDENT CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL> CREATE TABLE STUDENT
+  2  (NAME			     VARCHAR(50),
+  3   STUDENT_NUMBER	     INT,
+  4   CLASS			     INT,
+  5   MAJOR			     CHAR(5),
+  6   PRIMARY KEY(STUDENT_NUMBER)
+  7   );
+
+Table created.
+
+SQL> 
+SQL>  DESCRIBE STUDENT;
+ Name                                                                                Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ NAME                                                                                         VARCHAR2(50)
+ STUDENT_NUMBER                                                                      NOT NULL NUMBER(38)
+ CLASS                                                                                        NUMBER(38)
+ MAJOR                                                                                        CHAR(5)
+
+SQL> 
+SQL>  INSERT ALL
+  2   INTO STUDENT VALUES('Smith',17,1,'CS')
+  3   INTO STUDENT VALUES('Brown',8,2,'CS')
+  4   SELECT * FROM DUAL;
+
+2 rows created.
+
+SQL> 
+SQL>  SELECT * FROM STUDENT;
+
+NAME                                               STUDENT_NUMBER      CLASS MAJOR                                                                    
+-------------------------------------------------- -------------- ---------- -----                                                                    
+Smith                                                          17          1 CS                                                                       
+Brown                                                           8          2 CS                                                                       
+
+SQL> 
+SQL>  DROP TABLE COURSE CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL>  CREATE TABLE COURSE
+  2   (COURSE_NAME	     VARCHAR(100),
+  3    COURSE_NUMBER	     CHAR(12),
+  4    CREDIT_HOURS	     INT NOT NULL,
+  5    DEPARTMENT	     CHAR(5),
+  6    PRIMARY KEY(COURSE_NUMBER)
+  7    );
+
+Table created.
+
+SQL> 
+SQL>  DESCRIBE COURSE;
+ Name                                                                                Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ COURSE_NAME                                                                                  VARCHAR2(100)
+ COURSE_NUMBER                                                                       NOT NULL CHAR(12)
+ CREDIT_HOURS                                                                        NOT NULL NUMBER(38)
+ DEPARTMENT                                                                                   CHAR(5)
+
+SQL> 
+SQL>  INSERT ALL
+  2   INTO COURSE VALUES('Intro to Computer Science','CS1310',4,'CS')
+  3   INTO COURSE VALUES('Data Structures','CS3320',4,'CS')
+  4   INTO COURSE VALUES('Discrete Mathematics','MATH2410',3,'MATH')
+  5   INTO COURSE VALUES('Database','CS3380',3,'CS')
+  6   SELECT * FROM DUAL;
+
+4 rows created.
+
+SQL> 
+SQL>  SELECT * FR0M COURSE;
+ SELECT * FR0M COURSE
+          *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+Help: https://docs.oracle.com/error-help/db/ora-00923/ 
+
+
+SQL> 
+SQL>  DROP TABLE SECTION CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL>  CREATE TABLE SECTION
+  2   (SECTION_IDENTIFIER    INT,
+  3    COURSE_NUMBER		     CHAR(12) NOT NULL,
+  4    SEMESTER 			     CHAR(10),
+  5    YEAR				     CHAR(4),
+  6    INSTRUCTOR		     VARCHAR(50),
+  7    PRIMARY KEY(SECTION_IDENTIFIER));
+
+Table created.
+
+SQL> 
+SQL>   DESCRIBE SECTION;
+ Name                                                                                Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ SECTION_IDENTIFIER                                                                  NOT NULL NUMBER(38)
+ COURSE_NUMBER                                                                       NOT NULL CHAR(12)
+ SEMESTER                                                                                     CHAR(10)
+ YEAR                                                                                         CHAR(4)
+ INSTRUCTOR                                                                                   VARCHAR2(50)
+
+SQL> 
+SQL>   INSERT ALL
+  2    INTO SECTION VALUES(85,'MATH2410','Fall','07','King')
+  3    INTO SECTION VALUES(92,'CS1310','Fall','07','Anderson')
+  4    INTO SECTION VALUES(102,'CS3320','Spring','08','Knuth')
+  5    INTO SECTION VALUES(112,'MATH2410','Fall','08','Chang')
+  6    INTO SECTION VALUES(119,'CS1310','Fall','08','Anderson')
+  7    INTO SECTION VALUES(135,'CS3380','Fall','08','Stone')
+  8    SELECT * FROM DUAL;
+
+6 rows created.
+
+SQL> 
+SQL>   SELECT * FROM SECTION;
+
+SECTION_IDENTIFIER COURSE_NUMBE SEMESTER   YEAR INSTRUCTOR                                                                                            
+------------------ ------------ ---------- ---- --------------------------------------------------                                                    
+                85 MATH2410     Fall       07   King                                                                                                  
+                92 CS1310       Fall       07   Anderson                                                                                              
+               102 CS3320       Spring     08   Knuth                                                                                                 
+               112 MATH2410     Fall       08   Chang                                                                                                 
+               119 CS1310       Fall       08   Anderson                                                                                              
+               135 CS3380       Fall       08   Stone                                                                                                 
+
+6 rows selected.
+
+SQL> 
+SQL>   DROP TABLE GRADE_REPORT CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL>   CREATE TABLE GRADE_REPORT
+  2    (STUDENT_NUMBER		     INT NOT NULL,
+  3  	SECTION_IDENTIFIER   INT NOT NULL,
+  4  	GRADE				     CHAR(1));
+
+Table created.
+
+SQL> 
+SQL> 	DESCRIBE GRADE_REPORT;
+ Name                                                                                Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ STUDENT_NUMBER                                                                      NOT NULL NUMBER(38)
+ SECTION_IDENTIFIER                                                                  NOT NULL NUMBER(38)
+ GRADE                                                                                        CHAR(1)
+
+SQL> 
+SQL> 	INSERT ALL
+  2  	INTO GRADE_REPORT VALUES(17,112,'B')
+  3  	INTO GRADE_REPORT VALUES(17,119,'C')
+  4  	INTO GRADE_REPORT VALUES(8,85,'A')
+  5  	INTO GRADE_REPORT VALUES(8,92,'A')
+  6  	INTO GRADE_REPORT VALUES(8,102,'B')
+  7  	INTO GRADE_REPORT VALUES(8,135,'A')
+  8  	SELECT * FROM DUAL;
+
+6 rows created.
+
+SQL> 
+SQL> 	SELECT * FROM GRADE_REPORT;
+
+STUDENT_NUMBER SECTION_IDENTIFIER G                                                                                                                   
+-------------- ------------------ -                                                                                                                   
+            17                112 B                                                                                                                   
+            17                119 C                                                                                                                   
+             8                 85 A                                                                                                                   
+             8                 92 A                                                                                                                   
+             8                102 B                                                                                                                   
+             8                135 A                                                                                                                   
+
+6 rows selected.
+
+SQL> 
+SQL>  DROP TABLE PREREQUISITE CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL>  CREATE TABLE PREREQUISITE
+  2   (COURSE_NUMBER		     CHAR(12)NOT NULL,
+  3    PREREQUISITE_NUMBER   CHAR(12)NOT NULL);
+
+Table created.
+
+SQL> 
+SQL>   DESCRIBE PREREQUISITE;
+ Name                                                                                Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ COURSE_NUMBER                                                                       NOT NULL CHAR(12)
+ PREREQUISITE_NUMBER                                                                 NOT NULL CHAR(12)
+
+SQL> 
+SQL>   INSERT ALL
+  2    INTO PREREQUISITE VALUES('CS3380','CS3320')
+  3    INTO PREREQUISITE VALUES('CS3380','MATH2410')
+  4    INTO PREREQUISITE VALUES('CS3320','CS1310')
+  5    SELECT * FROM DUAL;
+
+3 rows created.
+
+SQL> 
+SQL>   SELECT * FROM PREREQUISITE;
+
+COURSE_NUMBE PREREQUISITE                                                                                                                             
+------------ ------------                                                                                                                             
+CS3380       CS3320                                                                                                                                   
+CS3380       MATH2410                                                                                                                                 
+CS3320       CS1310                                                                                                                                   
+
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> SELECT * RFOM EMPLOYEE;
+SELECT * RFOM EMPLOYEE
+         *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+Help: https://docs.oracle.com/error-help/db/ora-00923/ 
+
+
+SQL> SELECT * FROM EMPLOYEE;
+
+FNAME           M LNAME           SSN       BDATE     ADDRESS                        S     SALARY SUPER_SSN        DNO                                
+--------------- - --------------- --------- --------- ------------------------------ - ---------- --------- ----------                                
+John            B Smith           123456789 09-JAN-65 731 Fondren, Houston, TX       M      30000 333445555          5                                
+Franklin        T Wong            333445555 08-DEC-55 638 Voss, Houston, TX          M      40000 888665555          5                                
+Alicia          J Zelaya          999887777 19-JAN-68 3321 Castle, Spring, TX        F      25000 987654321          4                                
+Jennifer        S Wallace         987654321 20-JUN-41 291 Berry, Bellaire, TX        F      43000 888665555          4                                
+Ramesh          K Narayan         666884444 15-SEP-62 975 Fire Oak, Humble, TX       M      38000 333445555          5                                
+Joyce           A English         453453453 31-JUL-72 5631 Rice, Houston, TX         F      25000 333445555          5                                
+Ahmad           V Jabbar          987987987 29-MAR-69 980 Dallas, Houston, TX        M      25000 987654321          4                                
+James           E Borg            888665555 10-NOV-37 450 Stone, Houston, TX         M      55000                    1                                
+
+8 rows selected.
+
+SQL> SELECT * FROM EMPLOYEE;
+
+FNAME           M LNAME           SSN       BDATE     ADDRESS                        S     SALARY SUPER_SSN        DNO                                
+--------------- - --------------- --------- --------- ------------------------------ - ---------- --------- ----------                                
+John            B Smith           123456789 09-JAN-65 731 Fondren, Houston, TX       M      30000 333445555          5                                
+Franklin        T Wong            333445555 08-DEC-55 638 Voss, Houston, TX          M      40000 888665555          5                                
+Alicia          J Zelaya          999887777 19-JAN-68 3321 Castle, Spring, TX        F      25000 987654321          4                                
+Jennifer        S Wallace         987654321 20-JUN-41 291 Berry, Bellaire, TX        F      43000 888665555          4                                
+Ramesh          K Narayan         666884444 15-SEP-62 975 Fire Oak, Humble, TX       M      38000 333445555          5                                
+Joyce           A English         453453453 31-JUL-72 5631 Rice, Houston, TX         F      25000 333445555          5                                
+Ahmad           V Jabbar          987987987 29-MAR-69 980 Dallas, Houston, TX        M      25000 987654321          4                                
+James           E Borg            888665555 10-NOV-37 450 Stone, Houston, TX         M      55000                    1                                
+
+8 rows selected.
+
+SQL> START U:\F24-CPS541\HW1.sql
+SQL> --=============================================
+SQL> -- Name: Kunal Maheshwari	     Class: CPS541
+SQL> -- GlobalID: mahes1k
+SQL> -- HW Number: 01	Due Date: Sep 20
+SQL> -- ============================================
+SQL> 
+SQL> -- this command is needed for including the commands and results in output file
+SQL> set echo on;
+SQL> 
+SQL> --specify the path for the file name to save the log of this session
+SQL> spool U:\F24-CPS541\HW1log.txt

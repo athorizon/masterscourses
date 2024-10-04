@@ -1,0 +1,218 @@
+--=============================================
+-- Name: Kunal Maheshwari  	Class: CPS541
+-- GlobalID: mahes1k
+-- HW Number: 01   Due Date: Sep 20
+-- ============================================
+
+-- this command is needed for including the commands and results in output
+set echo on; 
+
+--specify the path for the file name to save the log of this session
+spool U:\F24-CPS541\HomeWork1\HW1log.txt
+
+--define the width of the display (example: 150 columns)
+set linesize 150;
+
+--define the page size -- no of rows to be printed before header appears
+set pagesize 120;
+
+-- Creating database UNIVERSITY that stores the student and course data below,
+-- Tables being created are STUDENT, COURSE, SECTION, GRADE_REPORT, PREREQUISITE
+-- STUDENT : stores the student data individually
+-- COURSE : stores the courses being offered
+-- SECTION : stores the data of the different section created for the different courses and related data
+-- GRADE_REPORT : stores the grades of the students and the related course
+-- PREREQUISITE : holds the relation for the course and its PREREQUISITE
+
+-- Table creation starts
+
+-- Dropping table STUDENT
+
+DROP TABLE STUDENT CASCADE CONSTRAINTS;
+
+-- Creating table STUDENT with primary key = STUDENT_NUMBER
+
+CREATE TABLE STUDENT
+(NAME				VARCHAR(50),
+ STUDENT_NUMBER 	INT,
+ CLASS				INT,
+ MAJOR				CHAR(5),
+ PRIMARY KEY(STUDENT_NUMBER)
+ );
+
+-- Inserting values in the table STUDENT
+-- below command will, insert all the values in a single command.
+ 
+ INSERT ALL 
+ INTO STUDENT VALUES('Smith',17,1,'CS') 
+ INTO STUDENT VALUES('Brown',8,2,'CS') 
+ SELECT * FROM DUAL;
+ 
+-- Describing STUDENT table and selecting all the values present
+
+ DESCRIBE STUDENT;
+
+ SELECT * FROM STUDENT;
+
+-- Dropping table COURSE if present
+
+ DROP TABLE COURSE CASCADE CONSTRAINTS;
+
+-- creating table COURSE with primary key = COURSE_NUMBER
+ 
+ CREATE TABLE COURSE
+ (COURSE_NAME		VARCHAR(100),
+  COURSE_NUMBER		CHAR(12),
+  CREDIT_HOURS		INT NOT NULL,
+  DEPARTMENT		CHAR(5),
+  PRIMARY KEY(COURSE_NUMBER)
+  );
+
+-- Populating COURSE table 
+ 
+ INSERT ALL 
+ INTO COURSE VALUES('Intro to Computer Science','CS1310',4,'CS')
+ INTO COURSE VALUES('Data Structures','CS3320',4,'CS')
+ INTO COURSE VALUES('Discrete Mathematics','MATH2410',3,'MATH')
+ INTO COURSE VALUES('Database','CS3380',3,'CS')
+ SELECT * FROM DUAL;
+
+-- Describing table COURSE and selecting all the values
+ 
+ DESCRIBE COURSE;
+
+ SELECT * FROM COURSE;
+
+-- Dropping table SECTION
+ 
+ DROP TABLE SECTION CASCADE CONSTRAINTS;
+ 
+-- creating table SECTION with primary key = SECTION_IDENTIFIER
+
+ CREATE TABLE SECTION
+ (SECTION_IDENTIFIER	INT,
+  COURSE_NUMBER			CHAR(12) NOT NULL,
+  SEMESTER				CHAR(10),
+  YEAR					CHAR(4),
+  INSTRUCTOR			VARCHAR(50),
+  PRIMARY KEY(SECTION_IDENTIFIER));
+
+-- Populating table SECTION with below values
+  
+  INSERT ALL
+  INTO SECTION VALUES(85,'MATH2410','Fall','07','King')
+  INTO SECTION VALUES(92,'CS1310','Fall','07','Anderson')
+  INTO SECTION VALUES(102,'CS3320','Spring','08','Knuth')
+  INTO SECTION VALUES(112,'MATH2410','Fall','08','Chang')
+  INTO SECTION VALUES(119,'CS1310','Fall','08','Anderson')
+  INTO SECTION VALUES(135,'CS3380','Fall','08','Stone')
+  SELECT * FROM DUAL;
+
+-- Describing SECTION and selecting all the values
+
+  DESCRIBE SECTION;
+  
+  SELECT * FROM SECTION;
+
+-- dropping table GRADE_REPORT
+  
+  DROP TABLE GRADE_REPORT CASCADE CONSTRAINTS;
+
+-- Creating table GRADE_REPORT
+  
+  CREATE TABLE GRADE_REPORT
+  (STUDENT_NUMBER		INT NOT NULL,
+   SECTION_IDENTIFIER	INT NOT NULL,
+   GRADE				CHAR(1));
+   
+-- Populating GRADE_REPORT with the below values
+   
+   INSERT ALL
+   INTO GRADE_REPORT VALUES(17,112,'B')
+   INTO GRADE_REPORT VALUES(17,119,'C')
+   INTO GRADE_REPORT VALUES(8,85,'A')
+   INTO GRADE_REPORT VALUES(8,92,'A')
+   INTO GRADE_REPORT VALUES(8,102,'B')
+   INTO GRADE_REPORT VALUES(8,135,'A')
+   SELECT * FROM DUAL;
+
+-- describing GRADE_REPORT and selecting all the values
+
+   DESCRIBE GRADE_REPORT;
+   
+   SELECT * FROM GRADE_REPORT;
+
+-- Dropping table PREREQUISITE
+  
+ DROP TABLE PREREQUISITE CASCADE CONSTRAINTS;
+
+-- Creating table PREREQUISITE 
+ 
+ CREATE TABLE PREREQUISITE
+ (COURSE_NUMBER			CHAR(12)NOT NULL,
+  PREREQUISITE_NUMBER	CHAR(12)NOT NULL);
+  
+-- Populating PREREQUISITE with the below values
+
+  INSERT ALL
+  INTO PREREQUISITE VALUES('CS3380','CS3320')
+  INTO PREREQUISITE VALUES('CS3380','MATH2410')
+  INTO PREREQUISITE VALUES('CS3320','CS1310')
+  SELECT * FROM DUAL;
+
+-- Describing PREREQUISITE and selecting all the values
+
+  DESCRIBE PREREQUISITE;
+  
+  SELECT * FROM PREREQUISITE;
+
+
+-- Tables created are STUDENT, COURSE, SECTION, GRADE_REPORT, PREREQUISITE
+
+-- Some SQL commands to overview the data present in the above database
+
+-- Selecting all the departments and count of courses being delivered
+
+SELECT DEPARTMENT, COUNT(DEPARTMENT) AS COURSES FROM COURSE GROUP BY DEPARTMENT;
+
+-- Selecting the no. of courses being instructed by different instructors
+
+SELECT INSTRUCTOR, COUNT(INSTRUCTOR) AS SECTION_INSTRUCTED FROM SECTION GROUP BY INSTRUCTOR;
+
+-- SELECTING ALL THE STUDENT AND THE SUBJECTS THEY ARE ENROLLED
+
+SELECT S.NAME, S.STUDENT_NUMBER, COUNT(G.SECTION_IDENTIFIER) FROM STUDENT S 
+JOIN GRADE_REPORT G ON S.STUDENT_NUMBER = G.STUDENT_NUMBER GROUP BY S.NAME, S.STUDENT_NUMBER;
+
+-- SELECTING THE NUMBER OF COURSES ENROLLED BY DIFFERENT STUDENTS FROM DIFFERENT DEPARTMENTS
+
+SELECT S.NAME, S.STUDENT_NUMBER, S.MAJOR,C.DEPARTMENT,COUNT(C.DEPARTMENT) AS COURSES_ENROLLED FROM STUDENT S 
+JOIN GRADE_REPORT G ON S.STUDENT_NUMBER = G.STUDENT_NUMBER 
+JOIN SECTION SE ON G.SECTION_IDENTIFIER = SE.SECTION_IDENTIFIER 
+JOIN COURSE C ON SE.COURSE_NUMBER = C.COURSE_NUMBER 
+GROUP BY S.NAME, S.STUDENT_NUMBER, S.MAJOR, C.DEPARTMENT 
+ORDER BY S.STUDENT_NUMBER, C.DEPARTMENT;
+
+-- SELECTING THE COURSE DATA WHERE COURSE NAME CONTAINS 'DATA'
+
+SELECT * FROM COURSE WHERE COURSE_NAME LIKE '%data%' OR COURSE_NAME LIKE '%Data%';
+
+-- SELECTING ALL THE COURSES AND THEIR PREREQUISITE COURSE_NUMBERS
+
+SELECT C.COURSE_NAME, C.COURSE_NUMBER, P.PREREQUISITE_NUMBER FROM COURSE C
+LEFT JOIN PREREQUISITE P ON C.COURSE_NUMBER = P.COURSE_NUMBER 
+ORDER BY 1;
+
+-- SELECTING ALL COURSES AND NUMBER OF SECTIONS PER SUBJECT PER SEMESTER
+SELECT S.SEMESTER,C.COURSE_NAME,S.COURSE_NUMBER,COUNT(S.COURSE_NUMBER) AS SECTIONS FROM SECTION S 
+JOIN COURSE C ON S.COURSE_NUMBER = C.COURSE_NUMBER 
+GROUP BY S.SEMESTER,C.COURSE_NAME,S.COURSE_NUMBER 
+ORDER BY 1;
+
+-- END OF SCRIPT
+
+SPOOL OFF;
+  
+
+  
+  

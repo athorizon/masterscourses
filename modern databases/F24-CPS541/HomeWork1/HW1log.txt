@@ -1,0 +1,378 @@
+SQL> 
+SQL> --define the width of the display (example: 150 columns)
+SQL> set linesize 150;
+SQL> 
+SQL> --define the page size -- no of rows to be printed before header appears
+SQL> set pagesize 120;
+SQL> 
+SQL> -- Creating database UNIVERSITY that stores the student and course data below,
+SQL> -- Tables being created are STUDENT, COURSE, SECTION, GRADE_REPORT, PREREQUISITE
+SQL> -- STUDENT : stores the student data individually
+SQL> -- COURSE : stores the courses being offered
+SQL> -- SECTION : stores the data of the different section created for the different courses and related data
+SQL> -- GRADE_REPORT : stores the grades of the students and the related course
+SQL> -- PREREQUISITE : holds the relation for the course and its PREREQUISITE
+SQL> 
+SQL> -- Table creation starts
+SQL> 
+SQL> -- Dropping table STUDENT
+SQL> 
+SQL> DROP TABLE STUDENT CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL> -- Creating table STUDENT with primary key = STUDENT_NUMBER
+SQL> 
+SQL> CREATE TABLE STUDENT
+  2  (NAME			     VARCHAR(50),
+  3   STUDENT_NUMBER	     INT,
+  4   CLASS			     INT,
+  5   MAJOR			     CHAR(5),
+  6   PRIMARY KEY(STUDENT_NUMBER)
+  7   );
+
+Table created.
+
+SQL> 
+SQL> -- Inserting values in the table STUDENT
+SQL> -- below command will, insert all the values in a single command.
+SQL> 
+SQL>  INSERT ALL
+  2   INTO STUDENT VALUES('Smith',17,1,'CS')
+  3   INTO STUDENT VALUES('Brown',8,2,'CS')
+  4   SELECT * FROM DUAL;
+
+2 rows created.
+
+SQL> 
+SQL> -- Describing STUDENT table and selecting all the values present
+SQL> 
+SQL>  DESCRIBE STUDENT;
+ Name                                                                                Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ NAME                                                                                         VARCHAR2(50)
+ STUDENT_NUMBER                                                                      NOT NULL NUMBER(38)
+ CLASS                                                                                        NUMBER(38)
+ MAJOR                                                                                        CHAR(5)
+
+SQL> 
+SQL>  SELECT * FROM STUDENT;
+
+NAME                                               STUDENT_NUMBER      CLASS MAJOR                                                                    
+-------------------------------------------------- -------------- ---------- -----                                                                    
+Smith                                                          17          1 CS                                                                       
+Brown                                                           8          2 CS                                                                       
+
+SQL> 
+SQL> -- Dropping table COURSE if present
+SQL> 
+SQL>  DROP TABLE COURSE CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL> -- creating table COURSE with primary key = COURSE_NUMBER
+SQL> 
+SQL>  CREATE TABLE COURSE
+  2   (COURSE_NAME	     VARCHAR(100),
+  3    COURSE_NUMBER	     CHAR(12),
+  4    CREDIT_HOURS	     INT NOT NULL,
+  5    DEPARTMENT	     CHAR(5),
+  6    PRIMARY KEY(COURSE_NUMBER)
+  7    );
+
+Table created.
+
+SQL> 
+SQL> -- Populating COURSE table
+SQL> 
+SQL>  INSERT ALL
+  2   INTO COURSE VALUES('Intro to Computer Science','CS1310',4,'CS')
+  3   INTO COURSE VALUES('Data Structures','CS3320',4,'CS')
+  4   INTO COURSE VALUES('Discrete Mathematics','MATH2410',3,'MATH')
+  5   INTO COURSE VALUES('Database','CS3380',3,'CS')
+  6   SELECT * FROM DUAL;
+
+4 rows created.
+
+SQL> 
+SQL> -- Describing table COURSE and selecting all the values
+SQL> 
+SQL>  DESCRIBE COURSE;
+ Name                                                                                Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ COURSE_NAME                                                                                  VARCHAR2(100)
+ COURSE_NUMBER                                                                       NOT NULL CHAR(12)
+ CREDIT_HOURS                                                                        NOT NULL NUMBER(38)
+ DEPARTMENT                                                                                   CHAR(5)
+
+SQL> 
+SQL>  SELECT * FROM COURSE;
+
+COURSE_NAME                                                                                          COURSE_NUMBE CREDIT_HOURS DEPAR                  
+---------------------------------------------------------------------------------------------------- ------------ ------------ -----                  
+Intro to Computer Science                                                                            CS1310                  4 CS                     
+Data Structures                                                                                      CS3320                  4 CS                     
+Discrete Mathematics                                                                                 MATH2410                3 MATH                   
+Database                                                                                             CS3380                  3 CS                     
+
+SQL> 
+SQL> -- Dropping table SECTION
+SQL> 
+SQL>  DROP TABLE SECTION CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL> -- creating table SECTION with primary key = SECTION_IDENTIFIER
+SQL> 
+SQL>  CREATE TABLE SECTION
+  2   (SECTION_IDENTIFIER    INT,
+  3    COURSE_NUMBER		     CHAR(12) NOT NULL,
+  4    SEMESTER 			     CHAR(10),
+  5    YEAR				     CHAR(4),
+  6    INSTRUCTOR		     VARCHAR(50),
+  7    PRIMARY KEY(SECTION_IDENTIFIER));
+
+Table created.
+
+SQL> 
+SQL> -- Populating table SECTION with below values
+SQL> 
+SQL>   INSERT ALL
+  2    INTO SECTION VALUES(85,'MATH2410','Fall','07','King')
+  3    INTO SECTION VALUES(92,'CS1310','Fall','07','Anderson')
+  4    INTO SECTION VALUES(102,'CS3320','Spring','08','Knuth')
+  5    INTO SECTION VALUES(112,'MATH2410','Fall','08','Chang')
+  6    INTO SECTION VALUES(119,'CS1310','Fall','08','Anderson')
+  7    INTO SECTION VALUES(135,'CS3380','Fall','08','Stone')
+  8    SELECT * FROM DUAL;
+
+6 rows created.
+
+SQL> 
+SQL> -- Describing SECTION and selecting all the values
+SQL> 
+SQL>   DESCRIBE SECTION;
+ Name                                                                                Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ SECTION_IDENTIFIER                                                                  NOT NULL NUMBER(38)
+ COURSE_NUMBER                                                                       NOT NULL CHAR(12)
+ SEMESTER                                                                                     CHAR(10)
+ YEAR                                                                                         CHAR(4)
+ INSTRUCTOR                                                                                   VARCHAR2(50)
+
+SQL> 
+SQL>   SELECT * FROM SECTION;
+
+SECTION_IDENTIFIER COURSE_NUMBE SEMESTER   YEAR INSTRUCTOR                                                                                            
+------------------ ------------ ---------- ---- --------------------------------------------------                                                    
+                85 MATH2410     Fall       07   King                                                                                                  
+                92 CS1310       Fall       07   Anderson                                                                                              
+               102 CS3320       Spring     08   Knuth                                                                                                 
+               112 MATH2410     Fall       08   Chang                                                                                                 
+               119 CS1310       Fall       08   Anderson                                                                                              
+               135 CS3380       Fall       08   Stone                                                                                                 
+
+6 rows selected.
+
+SQL> 
+SQL> -- dropping table GRADE_REPORT
+SQL> 
+SQL>   DROP TABLE GRADE_REPORT CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL> -- Creating table GRADE_REPORT
+SQL> 
+SQL>   CREATE TABLE GRADE_REPORT
+  2    (STUDENT_NUMBER		     INT NOT NULL,
+  3  	SECTION_IDENTIFIER   INT NOT NULL,
+  4  	GRADE				     CHAR(1));
+
+Table created.
+
+SQL> 
+SQL> -- Populating GRADE_REPORT with the below values
+SQL> 
+SQL> 	INSERT ALL
+  2  	INTO GRADE_REPORT VALUES(17,112,'B')
+  3  	INTO GRADE_REPORT VALUES(17,119,'C')
+  4  	INTO GRADE_REPORT VALUES(8,85,'A')
+  5  	INTO GRADE_REPORT VALUES(8,92,'A')
+  6  	INTO GRADE_REPORT VALUES(8,102,'B')
+  7  	INTO GRADE_REPORT VALUES(8,135,'A')
+  8  	SELECT * FROM DUAL;
+
+6 rows created.
+
+SQL> 
+SQL> -- describing GRADE_REPORT and selecting all the values
+SQL> 
+SQL> 	DESCRIBE GRADE_REPORT;
+ Name                                                                                Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ STUDENT_NUMBER                                                                      NOT NULL NUMBER(38)
+ SECTION_IDENTIFIER                                                                  NOT NULL NUMBER(38)
+ GRADE                                                                                        CHAR(1)
+
+SQL> 
+SQL> 	SELECT * FROM GRADE_REPORT;
+
+STUDENT_NUMBER SECTION_IDENTIFIER G                                                                                                                   
+-------------- ------------------ -                                                                                                                   
+            17                112 B                                                                                                                   
+            17                119 C                                                                                                                   
+             8                 85 A                                                                                                                   
+             8                 92 A                                                                                                                   
+             8                102 B                                                                                                                   
+             8                135 A                                                                                                                   
+
+6 rows selected.
+
+SQL> 
+SQL> -- Dropping table PREREQUISITE
+SQL> 
+SQL>  DROP TABLE PREREQUISITE CASCADE CONSTRAINTS;
+
+Table dropped.
+
+SQL> 
+SQL> -- Creating table PREREQUISITE
+SQL> 
+SQL>  CREATE TABLE PREREQUISITE
+  2   (COURSE_NUMBER		     CHAR(12)NOT NULL,
+  3    PREREQUISITE_NUMBER   CHAR(12)NOT NULL);
+
+Table created.
+
+SQL> 
+SQL> -- Populating PREREQUISITE with the below values
+SQL> 
+SQL>   INSERT ALL
+  2    INTO PREREQUISITE VALUES('CS3380','CS3320')
+  3    INTO PREREQUISITE VALUES('CS3380','MATH2410')
+  4    INTO PREREQUISITE VALUES('CS3320','CS1310')
+  5    SELECT * FROM DUAL;
+
+3 rows created.
+
+SQL> 
+SQL> -- Describing PREREQUISITE and selecting all the values
+SQL> 
+SQL>   DESCRIBE PREREQUISITE;
+ Name                                                                                Null?    Type
+ ----------------------------------------------------------------------------------- -------- --------------------------------------------------------
+ COURSE_NUMBER                                                                       NOT NULL CHAR(12)
+ PREREQUISITE_NUMBER                                                                 NOT NULL CHAR(12)
+
+SQL> 
+SQL>   SELECT * FROM PREREQUISITE;
+
+COURSE_NUMBE PREREQUISITE                                                                                                                             
+------------ ------------                                                                                                                             
+CS3380       CS3320                                                                                                                                   
+CS3380       MATH2410                                                                                                                                 
+CS3320       CS1310                                                                                                                                   
+
+SQL> 
+SQL> 
+SQL> -- Tables created are STUDENT, COURSE, SECTION, GRADE_REPORT, PREREQUISITE
+SQL> 
+SQL> -- Some SQL commands to overview the data present in the above database
+SQL> 
+SQL> -- Selecting all the departments and count of courses being delivered
+SQL> 
+SQL> SELECT DEPARTMENT, COUNT(DEPARTMENT) AS COURSES FROM COURSE GROUP BY DEPARTMENT;
+
+DEPAR    COURSES                                                                                                                                      
+----- ----------                                                                                                                                      
+MATH           1                                                                                                                                      
+CS             3                                                                                                                                      
+
+SQL> 
+SQL> -- Selecting the no. of courses being instructed by different instructors
+SQL> 
+SQL> SELECT INSTRUCTOR, COUNT(INSTRUCTOR) AS SECTION_INSTRUCTED FROM SECTION GROUP BY INSTRUCTOR;
+
+INSTRUCTOR                                         SECTION_INSTRUCTED                                                                                 
+-------------------------------------------------- ------------------                                                                                 
+Stone                                                               1                                                                                 
+Chang                                                               1                                                                                 
+Knuth                                                               1                                                                                 
+King                                                                1                                                                                 
+Anderson                                                            2                                                                                 
+
+SQL> 
+SQL> -- SELECTING ALL THE STUDENT AND THE SUBJECTS THEY ARE ENROLLED
+SQL> 
+SQL> SELECT S.NAME, S.STUDENT_NUMBER, COUNT(G.SECTION_IDENTIFIER) FROM STUDENT S
+  2  JOIN GRADE_REPORT G ON S.STUDENT_NUMBER = G.STUDENT_NUMBER GROUP BY S.NAME, S.STUDENT_NUMBER;
+
+NAME                                               STUDENT_NUMBER COUNT(G.SECTION_IDENTIFIER)                                                         
+-------------------------------------------------- -------------- ---------------------------                                                         
+Smith                                                          17                           2                                                         
+Brown                                                           8                           4                                                         
+
+SQL> 
+SQL> -- SELECTING THE NUMBER OF COURSES ENROLLED BY DIFFERENT STUDENTS FROM DIFFERENT DEPARTMENTS
+SQL> 
+SQL> SELECT S.NAME, S.STUDENT_NUMBER, S.MAJOR,C.DEPARTMENT,COUNT(C.DEPARTMENT) AS COURSES_ENROLLED FROM STUDENT S
+  2  JOIN GRADE_REPORT G ON S.STUDENT_NUMBER = G.STUDENT_NUMBER
+  3  JOIN SECTION SE ON G.SECTION_IDENTIFIER = SE.SECTION_IDENTIFIER
+  4  JOIN COURSE C ON SE.COURSE_NUMBER = C.COURSE_NUMBER
+  5  GROUP BY S.NAME, S.STUDENT_NUMBER, S.MAJOR, C.DEPARTMENT
+  6  ORDER BY S.STUDENT_NUMBER, C.DEPARTMENT;
+
+NAME                                               STUDENT_NUMBER MAJOR DEPAR COURSES_ENROLLED                                                        
+-------------------------------------------------- -------------- ----- ----- ----------------                                                        
+Brown                                                           8 CS    CS                   3                                                        
+Brown                                                           8 CS    MATH                 1                                                        
+Smith                                                          17 CS    CS                   1                                                        
+Smith                                                          17 CS    MATH                 1                                                        
+
+SQL> 
+SQL> -- SELECTING THE COURSE DATA WHERE COURSE NAME CONTAINS 'DATA'
+SQL> 
+SQL> SELECT * FROM COURSE WHERE COURSE_NAME LIKE '%data%' OR COURSE_NAME LIKE '%Data%';
+
+COURSE_NAME                                                                                          COURSE_NUMBE CREDIT_HOURS DEPAR                  
+---------------------------------------------------------------------------------------------------- ------------ ------------ -----                  
+Data Structures                                                                                      CS3320                  4 CS                     
+Database                                                                                             CS3380                  3 CS                     
+
+SQL> 
+SQL> -- SELECTING ALL THE COURSES AND THEIR PREREQUISITE COURSE_NUMBERS
+SQL> 
+SQL> SELECT C.COURSE_NAME, C.COURSE_NUMBER, P.PREREQUISITE_NUMBER FROM COURSE C
+  2  LEFT JOIN PREREQUISITE P ON C.COURSE_NUMBER = P.COURSE_NUMBER
+  3  ORDER BY 1;
+
+COURSE_NAME                                                                                          COURSE_NUMBE PREREQUISITE                        
+---------------------------------------------------------------------------------------------------- ------------ ------------                        
+Data Structures                                                                                      CS3320       CS1310                              
+Database                                                                                             CS3380       MATH2410                            
+Database                                                                                             CS3380       CS3320                              
+Discrete Mathematics                                                                                 MATH2410                                         
+Intro to Computer Science                                                                            CS1310                                           
+
+SQL> 
+SQL> -- SELECTING ALL COURSES AND NUMBER OF SECTIONS PER SUBJECT PER SEMESTER
+SQL> SELECT S.SEMESTER,C.COURSE_NAME,S.COURSE_NUMBER,COUNT(S.COURSE_NUMBER) AS SECTIONS FROM SECTION S
+  2  JOIN COURSE C ON S.COURSE_NUMBER = C.COURSE_NUMBER
+  3  GROUP BY S.SEMESTER,C.COURSE_NAME,S.COURSE_NUMBER
+  4  ORDER BY 1;
+
+SEMESTER   COURSE_NAME                                                                                          COURSE_NUMBE   SECTIONS               
+---------- ---------------------------------------------------------------------------------------------------- ------------ ----------               
+Fall       Database                                                                                             CS3380                1               
+Fall       Discrete Mathematics                                                                                 MATH2410              2               
+Fall       Intro to Computer Science                                                                            CS1310                2               
+Spring     Data Structures                                                                                      CS3320                1               
+
+SQL> 
+SQL> -- END OF SCRIPT
+SQL> 
+SQL> SPOOL OFF;
